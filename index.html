@@ -1,0 +1,450 @@
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5fafc">
+  <title>Pronunciation Practice</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&amp;family=Fraunces:opsz,wght@9..144,600;9..144,700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink: #18314a;
+      --muted: #678096;
+      --line: #dce7ef;
+      --mint: #11bb8e;
+      --mint-deep: #078b69;
+      --amber: #ffb800;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "DM Sans", sans-serif;
+      color: var(--ink);
+      background: #f5fafc;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    button:focus-visible {
+      outline: 3px solid #56c8ef;
+      outline-offset: 3px;
+    }
+
+    .app-shell {
+      width: 100%;
+      min-height: calc(100 * min(var(--vh, 1vh), 1vh));
+      background:
+        radial-gradient(circle at 85% 3%, rgba(170, 240, 222, 0.45), transparent 23rem),
+        linear-gradient(180deg, #f9fcfd 0%, #f2f9fc 100%);
+    }
+
+    .study-card {
+      border: 1px solid var(--line);
+      box-shadow: 0 11px 28px rgba(37, 78, 105, 0.06);
+    }
+
+    .expression-chip {
+      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .expression-chip:hover {
+      transform: translateY(-2px);
+    }
+
+    .expression-chip.active {
+      border-color: #7ddfc5;
+      background: #f0fffa;
+      box-shadow: 0 5px 14px rgba(17, 187, 142, 0.11);
+    }
+
+    .speed-button {
+      transition: transform 0.2s ease, background 0.2s ease;
+    }
+
+    .speed-button:hover {
+      transform: translateY(-2px);
+    }
+
+    .recording-ring {
+      animation: recordPulse 1.25s infinite;
+    }
+
+    @keyframes recordPulse {
+      0% {
+        box-shadow: 0 0 0 0 rgba(249, 83, 83, 0.38);
+      }
+
+      70% {
+        box-shadow: 0 0 0 13px rgba(249, 83, 83, 0);
+      }
+
+      100% {
+        box-shadow: 0 0 0 0 rgba(249, 83, 83, 0);
+      }
+    }
+
+    .unit-disabled {
+      opacity: 0.58;
+      cursor: not-allowed;
+    }
+  </style>
+ </head>
+ <body>
+  <div class="app-shell">
+   <header class="w-full px-4 pt-5 sm:px-7 sm:pt-8">
+    <div class="mx-auto flex max-w-4xl flex-col gap-5 rounded-[26px] border border-[#dce7ef] bg-white/90 px-5 py-5 shadow-sm sm:flex-row sm:items-center sm:justify-between sm:px-7">
+     <div>
+      <p class="mb-1 text-xs font-bold tracking-[.18em] text-[#11bb8e]">ENGLISH SPEAKING LAB</p>
+      <h1 class="font-['Fraunces'] text-[32px] font-bold leading-tight text-[#18314a]">Pronunciation Practice</h1>
+     </div>
+     <div class="flex items-center gap-3 rounded-2xl bg-[#f1fbf8] px-4 py-3">
+      <i data-lucide="sparkles" class="h-5 w-5 text-[#11bb8e]" aria-hidden="true"></i>
+      <div>
+       <p class="text-xs font-semibold text-[#678096]">오늘 연습한 표현</p>
+       <p id="header-progress" class="text-sm font-bold text-[#078b69]" aria-live="polite">0 / 2</p>
+      </div>
+     </div>
+    </div>
+   </header>
+   <main class="mx-auto w-full max-w-4xl px-4 pb-10 pt-6 sm:px-7">
+    <nav aria-label="Unit navigation" class="mb-5 flex flex-wrap gap-2">
+     <button type="button" class="rounded-full border border-[#9fe7d3] bg-[#eafff8] px-4 py-2 text-sm font-bold text-[#078b69]" aria-current="page"> 5단원 </button> <button type="button" class="unit-disabled rounded-full border border-[#dce7ef] bg-white px-4 py-2 text-sm font-semibold text-[#678096]" disabled> 6단원 · 준비 중 </button> <button type="button" class="unit-disabled rounded-full border border-[#dce7ef] bg-white px-4 py-2 text-sm font-semibold text-[#678096]" disabled> 7단원 · 준비 중 </button> <button type="button" class="unit-disabled rounded-full border border-[#dce7ef] bg-white px-4 py-2 text-sm font-semibold text-[#678096]" disabled> 8단원 · 준비 중 </button>
+    </nav>
+    <section class="study-card rounded-[25px] bg-white p-5 sm:p-8" aria-labelledby="practice-heading">
+     <div class="flex flex-col gap-3 border-b border-[#e7eef3] pb-5 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+       <p class="mb-1 text-sm font-bold text-[#11bb8e]">UNIT 5 · 핵심 표현</p>
+       <h2 id="practice-heading" class="text-[24px] font-bold text-[#18314a]">단어를 누르며 문장 발음을 들어요</h2>
+      </div><span class="w-fit rounded-full bg-[#fff5d8] px-3 py-1 text-xs font-bold text-[#9b6400]">최소 문장 2개</span>
+     </div>
+     <div class="mt-5 flex items-center justify-between gap-3" role="group" aria-label="Expression navigation">
+      <button id="nav-prev" type="button" class="flex-shrink-0 rounded-lg p-2 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50" aria-label="이전 문장"> <i data-lucide="chevron-left" class="h-5 w-5" aria-hidden="true"></i> </button>
+      <div class="expression-chip active flex-grow rounded-2xl border border-[#dce7ef] p-4 text-left">
+       <p id="sentence-label" class="mb-2 text-xs font-bold text-[#11bb8e]">표현 01</p>
+       <p id="sentence-text" class="text-[17px] font-semibold leading-relaxed text-[#18314a]">I'm curious about that balloon.</p>
+      </div><button id="nav-next" type="button" class="flex-shrink-0 rounded-lg p-2 hover:bg-gray-100 disabled:cursor-not-allowed disabled:opacity-50" aria-label="다음 문장"> <i data-lucide="chevron-right" class="h-5 w-5" aria-hidden="true"></i> </button>
+     </div>
+     <div class="mt-7 rounded-[22px] bg-[#f4f8fa] px-5 py-7 text-center">
+      <p class="mb-4 text-sm font-bold text-[#46677e]">문장 듣기</p>
+      <div class="flex flex-wrap justify-center gap-3">
+       <button id="slow-listen" type="button" class="speed-button inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 font-bold text-[#078b69] shadow-sm"> <i data-lucide="volume-2" class="h-4 w-4" aria-hidden="true"></i> x0.75 </button> <button id="normal-listen" type="button" class="speed-button inline-flex items-center gap-2 rounded-xl bg-white px-4 py-3 font-bold text-[#078b69] shadow-sm"> <i data-lucide="volume-2" class="h-4 w-4" aria-hidden="true"></i> x1.0 </button>
+      </div><button id="meaning-toggle" type="button" class="mt-5 rounded-lg border border-[#dce7ef] bg-white px-3 py-2 text-xs font-bold text-[#46677e]"> 해석 보기 </button>
+      <p id="meaning-text" class="mt-3 hidden rounded-xl bg-white px-4 py-3 text-sm font-semibold text-[#31526e]" aria-live="polite"></p>
+     </div>
+    </section>
+    <section class="study-card mt-5 rounded-[25px] bg-white p-5 sm:p-8" aria-labelledby="score-heading">
+     <div class="text-center">
+      <p class="text-sm font-bold text-[#11bb8e]">발음 확인</p>
+      <h2 id="score-heading" class="mt-1 text-[24px] font-bold text-[#18314a]">내 발음은 몇 점일까요?</h2>
+      <p class="mx-auto mt-2 max-w-xl text-sm leading-relaxed text-[#678096]">문장 듣기 후 마이크를 누르고, 선택한 문장을 자연스럽게 말해 보세요.</p>
+     </div>
+     <div class="mt-6 grid gap-3 sm:grid-cols-2">
+      <div class="rounded-2xl bg-[#f1fbff] p-4 text-center">
+       <p class="text-xs font-bold text-[#277ca2]">정확성</p>
+       <p class="mt-1 text-2xl font-bold text-[#277ca2]"><span id="accuracy-score">--</span><span class="text-base">점</span></p>
+       <div id="accuracy-stars" class="mt-1 text-lg tracking-[.05em] text-[#ffb800]" aria-label="Accuracy stars">
+        ☆☆☆
+       </div>
+      </div>
+      <div class="rounded-2xl bg-[#f8ffed] p-4 text-center">
+       <p class="text-xs font-bold text-[#638c19]">유창성</p>
+       <p class="mt-1 text-2xl font-bold text-[#638c19]"><span id="fluency-score">--</span><span class="text-base">점</span></p>
+       <div id="fluency-stars" class="mt-1 text-lg tracking-[.05em] text-[#ffb800]" aria-label="Fluency stars">
+        ☆☆☆
+       </div>
+      </div>
+     </div>
+     <div class="mt-6 flex flex-col items-center">
+      <button id="record-button" type="button" class="inline-flex items-center gap-2 rounded-xl bg-[#11bb8e] px-5 py-3 font-bold text-white shadow-sm transition hover:bg-[#078b69] disabled:cursor-not-allowed"> <i data-lucide="mic" class="h-5 w-5" aria-hidden="true"></i> 내 발음 듣기 </button>
+      <p id="record-status" class="mt-3 min-h-5 text-center text-sm font-semibold text-[#678096]" aria-live="polite"></p>
+      <div id="transcript-wrap" class="mt-3 hidden w-full rounded-xl border border-[#dce7ef] bg-[#fbfdfe] px-4 py-3 text-center">
+       <p class="mb-1 text-xs font-bold text-[#678096]">인식된 문장</p>
+       <p id="transcript" class="text-sm text-[#31526e]"></p>
+      </div><button id="retry-button" type="button" class="mt-4 hidden rounded-lg border border-[#dce7ef] bg-white px-4 py-2 text-sm font-bold text-[#078b69] transition hover:bg-[#f1fbf8]"> 다시 도전하기 </button>
+     </div>
+    </section>
+    <aside class="mx-auto mt-5 max-w-md rounded-[20px] bg-[#f1f8fb] px-5 py-4 text-center shadow-sm" aria-label="Overall practice score">
+     <p class="text-xs font-bold text-[#678096]">현재 전체 최고 점수</p>
+     <p class="mt-1 text-lg font-bold text-[#31526e]"><span id="overall-score">--</span><span class="text-sm">점</span></p>
+     <p id="overall-stars" class="text-[#ffb800]" aria-label="Overall stars">☆☆☆</p>
+    </aside>
+   </main>
+   <footer class="w-full px-4 pb-7 text-center sm:px-7">
+    <p class="text-xs text-[#8aa0b0]">6~8단원 표현은 준비되면 이어서 추가할 수 있어요.</p>
+   </footer>
+  </div>
+  <script>
+    const expressions = [
+      {
+        text: "I'm curious about that balloon.",
+        meaning: "나는 저 풍선이 궁금해."
+      },
+      {
+        text: "It means you must not enter.",
+        meaning: "그것은 들어가면 안 된다는 뜻이야."
+      }
+    ];
+
+    let selectedIndex = 0;
+    let recognition = null;
+    let isRecording = false;
+    const results = [null, null];
+
+    const statusEl = document.getElementById("record-status");
+    const meaningEl = document.getElementById("meaning-text");
+    const recordButton = document.getElementById("record-button");
+    const retryButton = document.getElementById("retry-button");
+    const transcriptWrap = document.getElementById("transcript-wrap");
+
+    function setStatus(message) {
+      statusEl.textContent = message;
+    }
+
+    function speak(rate) {
+      if (!("speechSynthesis" in window)) {
+        setStatus("이 브라우저에서는 문장 듣기를 지원하지 않아요.");
+        return;
+      }
+
+      window.speechSynthesis.cancel();
+
+      const utterance = new SpeechSynthesisUtterance(expressions[selectedIndex].text);
+      utterance.lang = "en-US";
+      utterance.rate = rate;
+
+      utterance.onstart = () => {
+        setStatus("문장을 듣고 있어요.");
+      };
+
+      utterance.onend = () => {
+        setStatus("이제 따라 말해 보세요.");
+      };
+
+      utterance.onerror = () => {
+        setStatus("문장을 재생하지 못했어요. 다시 눌러 주세요.");
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+
+    function normalize(text) {
+      return text
+        .toLowerCase()
+        .replace(/[^a-z\s']/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function scoreTranscript(transcript) {
+      const targetWords = normalize(expressions[selectedIndex].text)
+        .replace(/'/g, "")
+        .split(" ")
+        .filter(Boolean);
+
+      const spokenWords = normalize(transcript)
+        .replace(/'/g, "")
+        .split(" ")
+        .filter(Boolean);
+
+      const matches = targetWords.filter(word => spokenWords.includes(word)).length;
+      const accuracy = Math.max(0, Math.min(100, Math.round((matches / targetWords.length) * 100)));
+      const fluency = spokenWords.length ? Math.max(55, Math.min(100, 62 + matches * 12)) : 0;
+
+      return {
+        accuracy,
+        fluency,
+        total: Math.round((accuracy + fluency) / 2)
+      };
+    }
+
+    function stars(score) {
+      if (score === null) return "☆☆☆";
+      if (score >= 85) return "★★★";
+      if (score >= 65) return "★★☆";
+      return "★☆☆";
+    }
+
+    function updateScores(score) {
+      document.getElementById("accuracy-score").textContent = score.accuracy;
+      document.getElementById("fluency-score").textContent = score.fluency;
+      document.getElementById("accuracy-stars").textContent = stars(score.accuracy);
+      document.getElementById("fluency-stars").textContent = stars(score.fluency);
+
+      results[selectedIndex] = score;
+
+      const completed = results.filter(value => value !== null);
+      document.getElementById("header-progress").textContent = `${completed.length} / ${expressions.length}`;
+
+      const overall = completed.length
+        ? Math.round(completed.reduce((sum, result) => sum + result.total, 0) / completed.length)
+        : null;
+
+      document.getElementById("overall-score").textContent = overall === null ? "--" : overall;
+      document.getElementById("overall-stars").textContent = stars(overall);
+    }
+
+    function resetCurrentView() {
+      const existing = results[selectedIndex];
+
+      document.getElementById("accuracy-score").textContent = existing ? existing.accuracy : "--";
+      document.getElementById("fluency-score").textContent = existing ? existing.fluency : "--";
+      document.getElementById("accuracy-stars").textContent = existing ? stars(existing.accuracy) : "☆☆☆";
+      document.getElementById("fluency-stars").textContent = existing ? stars(existing.fluency) : "☆☆☆";
+
+      transcriptWrap.classList.add("hidden");
+      retryButton.classList.add("hidden");
+      meaningEl.classList.add("hidden");
+      setStatus("");
+    }
+
+    function updateExpressionDisplay() {
+      const sentence = expressions[selectedIndex];
+
+      document.getElementById("sentence-label").textContent = `표현 ${String(selectedIndex + 1).padStart(2, "0")}`;
+      document.getElementById("sentence-text").textContent = sentence.text;
+
+      document.getElementById("nav-prev").disabled = selectedIndex === 0;
+      document.getElementById("nav-next").disabled = selectedIndex === expressions.length - 1;
+
+      resetCurrentView();
+    }
+
+    function selectExpression(index) {
+      if (isRecording) return;
+      selectedIndex = index;
+      updateExpressionDisplay();
+    }
+
+    function setRecordingUI(recording) {
+      isRecording = recording;
+      recordButton.disabled = recording;
+      recordButton.classList.toggle("recording-ring", recording);
+      recordButton.classList.toggle("opacity-70", recording);
+    }
+
+    function getRecognitionErrorMessage(errorCode) {
+      const errorMessages = {
+        "not-allowed": "마이크 접근이 차단됐어요. Chrome 주소창 왼쪽의 사이트 설정에서 마이크를 허용하고, HTTPS 주소로 접속했는지 확인해 주세요.",
+        "service-not-allowed": "이 환경에서는 음성 인식 서비스 사용이 차단됐어요. Chrome 보안 정책 또는 네트워크 설정을 확인해 주세요.",
+        "audio-capture": "마이크를 찾을 수 없어요. 마이크가 연결되어 있는지, 다른 앱에서 사용 중이지 않은지 확인해 주세요.",
+        "network": "음성 인식 서버에 연결하지 못했어요. 인터넷 연결 또는 네트워크 정책을 확인해 주세요.",
+        "no-speech": "음성이 들리지 않았어요. 마이크에 가까이 또렷하게 말한 뒤 다시 시도해 주세요.",
+        "aborted": "음성 인식이 중단됐어요. 다시 시도해 주세요.",
+        "language-not-supported": "선택한 영어 음성 인식 언어를 지원하지 않아요. Chrome 최신 버전에서 다시 시도해 주세요.",
+        "not-supported": "이 브라우저는 음성 인식을 지원하지 않아요. HTTPS로 접속한 최신 Chrome에서 이용해 주세요."
+      };
+
+      return errorMessages[errorCode] || `음성 인식을 시작하지 못했어요. 오류 코드: ${errorCode || "unknown"}`;
+    }
+
+    function startRecognition() {
+      const Recognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+      if (!Recognition) {
+        setStatus(getRecognitionErrorMessage("not-supported"));
+        return;
+      }
+
+      if (!window.isSecureContext && location.hostname !== "localhost") {
+        setStatus("음성 인식은 HTTPS 환경에서만 사용할 수 있어요. Vercel 배포 주소 또는 HTTPS 주소로 다시 접속해 주세요.");
+        return;
+      }
+
+      if (recognition && isRecording) {
+        return;
+      }
+
+      recognition = new Recognition();
+      recognition.lang = "en-US";
+      recognition.interimResults = false;
+      recognition.continuous = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setRecordingUI(true);
+        setStatus("듣고 있어요… 문장을 또렷하게 말해 보세요.");
+      };
+
+      recognition.onresult = event => {
+        const transcript = event.results[0][0].transcript;
+
+        document.getElementById("transcript").textContent = transcript;
+        transcriptWrap.classList.remove("hidden");
+
+        updateScores(scoreTranscript(transcript));
+        retryButton.classList.remove("hidden");
+        setStatus("평가가 완료됐어요. 한 번 더 도전해 볼까요?");
+      };
+
+      recognition.onerror = event => {
+        setStatus(getRecognitionErrorMessage(event.error));
+        setRecordingUI(false);
+      };
+
+      recognition.onend = () => {
+        setRecordingUI(false);
+      };
+
+      try {
+        recognition.start();
+      } catch (error) {
+        setRecordingUI(false);
+
+        if (error.name === "NotAllowedError" || error.name === "SecurityError") {
+          setStatus(getRecognitionErrorMessage("not-allowed"));
+          return;
+        }
+
+        if (error.name === "InvalidStateError") {
+          setStatus("음성 인식이 이미 실행 중이에요. 잠시 후 다시 시도해 주세요.");
+          return;
+        }
+
+        setStatus(`음성 인식을 시작할 수 없어요. ${error.message || "잠시 후 다시 시도해 주세요."}`);
+      }
+    }
+
+    document.getElementById("slow-listen").addEventListener("click", () => speak(0.75));
+    document.getElementById("normal-listen").addEventListener("click", () => speak(1));
+
+    document.getElementById("nav-prev").addEventListener("click", () => {
+      if (selectedIndex > 0) {
+        selectExpression(selectedIndex - 1);
+      }
+    });
+
+    document.getElementById("nav-next").addEventListener("click", () => {
+      if (selectedIndex < expressions.length - 1) {
+        selectExpression(selectedIndex + 1);
+      }
+    });
+
+    document.getElementById("meaning-toggle").addEventListener("click", () => {
+      meaningEl.textContent = expressions[selectedIndex].meaning;
+      meaningEl.classList.toggle("hidden");
+    });
+
+    recordButton.addEventListener("click", startRecognition);
+
+    retryButton.addEventListener("click", () => {
+      transcriptWrap.classList.add("hidden");
+      retryButton.classList.add("hidden");
+      setStatus("다시 녹음해 볼까요?");
+      startRecognition();
+    });
+
+    document.addEventListener("DOMContentLoaded", () => {
+      updateExpressionDisplay();
+      lucide.createIcons();
+    });
+  </script>
+ </body>
+</html>
